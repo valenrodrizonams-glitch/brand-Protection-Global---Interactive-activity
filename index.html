@@ -124,7 +124,9 @@
     position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:5;
     width:260px; max-width: calc(100vw - 36px);
     padding:14px 16px; display:flex; flex-direction:column; gap:10px; align-items:stretch;
+    transition: opacity .2s ease;
   }
+  .trip-bar.is-hidden{ display:none; }
   .trip-bar-btn{
     width:100%; padding:10px 14px; border:none; border-radius:9px; cursor:pointer;
     background: var(--accent); color: var(--accent-ink); font:700 13px "Public Sans",sans-serif;
@@ -179,7 +181,6 @@
   .select-hotspot-layer{
     position:relative; width:min(100%, calc((100vh - 250px) * 16 / 9)); aspect-ratio:16/9; margin:0 auto;
   }
-  .select-img{ position:absolute; inset:0; width:100%; height:100%; display:block; border-radius:12px; box-shadow:0 10px 28px var(--panel-shadow); }
   .hotspot{
     position:absolute; border:2px solid transparent; border-radius:10px; background:transparent; cursor:pointer;
     transition: border-color .15s ease, background-color .15s ease; padding:0;
@@ -279,14 +280,13 @@
 <!-- 4. Triangle Pharmacy - Copycat Allegra — the Allegra selection image (4.1) fades in over the
      last 2 seconds of this video; left = Allegra (-> 4.3, correct), right = the other box (-> 4.2, wrong) -->
 <div class="screen-overlay" id="screen-triangle-allegra-context"
-     data-reveal-before-end="2" data-left-next="triangle-allegra-correct" data-right-next="triangle-allegra-wrong">
+     data-reveal-before-end="5" data-left-next="triangle-allegra-correct" data-right-next="triangle-allegra-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline>
         <source src="videos/triangle-allegra-context.mp4" type="video/mp4">
       </video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" src="images/select-triangle.jpg" alt="Emma, Triangle Pharmacy pharmacist, with the Allegra and the look-alike box on the counter">
         <button class="hotspot hotspot-left" data-role="left" aria-label="Select Allegra"></button>
         <button class="hotspot hotspot-right" data-role="right" aria-label="Select the other product"></button>
       </div>
@@ -330,14 +330,13 @@
 <!-- 5. Triangle Pharmacy - Copycat Novalgina — image 5.1 fades in the same way;
      here right = Novalgina (-> 5.3, correct), left = the other box (-> 5.2, wrong) -->
 <div class="screen-overlay" id="screen-triangle-novalgina-context"
-     data-reveal-before-end="2" data-left-next="triangle-novalgina-wrong" data-right-next="triangle-novalgina-correct">
+     data-reveal-before-end="5" data-left-next="triangle-novalgina-wrong" data-right-next="triangle-novalgina-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline>
         <source src="videos/triangle-novalgina-context.mp4" type="video/mp4">
       </video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" src="images/select-novalgina.jpg" alt="Emma, Triangle Pharmacy pharmacist, with the Novalgina and the look-alike box on the counter">
         <button class="hotspot hotspot-left" data-role="left" aria-label="Select the other product"></button>
         <button class="hotspot hotspot-right" data-role="right" aria-label="Select Novalgina"></button>
       </div>
@@ -394,6 +393,7 @@
   var mapFrame = document.getElementById("map-frame");
   var videoNoRoute = document.getElementById("video-no-route");
   var videoWithRoute = document.getElementById("video-with-route");
+  var tripBar = document.getElementById("trip-bar");
   var startBtn = document.getElementById("btn-start-route");
   var routeActive = false;
 
@@ -401,6 +401,7 @@
     mapFrame.classList.add("is-active");
     startBtn.classList.add("is-active");
     startBtn.textContent = "Clear Route";
+    tripBar.classList.add("is-hidden");
     videoWithRoute.currentTime = 0;
     videoWithRoute.play();
     videoNoRoute.pause();
@@ -410,6 +411,7 @@
     mapFrame.classList.remove("is-active");
     startBtn.classList.remove("is-active");
     startBtn.textContent = "Start Route";
+    tripBar.classList.remove("is-hidden");
     videoNoRoute.currentTime = 0;
     videoNoRoute.play();
     videoWithRoute.pause();
