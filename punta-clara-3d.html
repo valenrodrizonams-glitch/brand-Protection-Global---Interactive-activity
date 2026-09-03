@@ -70,14 +70,17 @@
     box-shadow: 0 10px 28px var(--panel-shadow);
     backdrop-filter: blur(6px);
   }
-  .left-column{
+  .title-card{
+    position:absolute; top:18px; left:18px; z-index:5;
+    padding:14px 18px; max-width: calc(100vw - 36px);
+  }
+
+  .right-panel{
     position:absolute; top:18px; right:18px; z-index:5;
-    width:290px; max-width: calc(100vw - 36px);
+    width:240px; max-width: calc(100vw - 36px);
     display:flex; flex-direction:column; gap:12px;
     max-height: calc(100vh - 36px); overflow:auto;
   }
-
-  .title-card{ padding:14px 18px; }
   .title-card h1{ margin:0 0 2px; font-family:"Archivo",sans-serif; font-weight:800; font-size:19px; letter-spacing:-.01em; }
   .title-card p{ margin:0; font-size:12px; color:var(--ink-soft); }
   .title-card .badge3d{
@@ -118,6 +121,8 @@
   .route-stop.is-destination .stop-label{ font-weight:700; }
 
   .trip-bar{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:5;
+    width:260px; max-width: calc(100vw - 36px);
     padding:14px 16px; display:flex; flex-direction:column; gap:10px; align-items:stretch;
   }
   .trip-bar-btn{
@@ -140,7 +145,8 @@
   }
 
   @media (max-width:720px){
-    .left-column{ width: calc(100vw - 36px); }
+    .right-panel{ width: calc(100vw - 36px); }
+    .trip-bar{ width: calc(100vw - 36px); }
   }
 
   /* ---- pharmacy-visit screens (Triangle / Star flow) ---- */
@@ -213,12 +219,12 @@
     </video>
   </div>
 
-  <div class="left-column">
-    <div class="title-card card">
-      <h1>CSI Opella route simulation</h1>
-      <span class="badge3d">MAP VIEW</span>
-    </div>
+  <div class="title-card card">
+    <h1>CSI Opella route simulation</h1>
+    <span class="badge3d">MAP VIEW</span>
+  </div>
 
+  <div class="right-panel">
     <div class="search-bar card" aria-hidden="true">
       <span class="icon-search">&#128269;</span>
       <span class="search-text">New Trade Visit</span>
@@ -248,10 +254,10 @@
         <span class="stop-label">Opella Healthcare Colombia</span>
       </div>
     </div>
+  </div>
 
-    <div class="trip-bar card" id="trip-bar">
-      <button class="trip-bar-btn" id="btn-start-route">Start Route</button>
-    </div>
+  <div class="trip-bar card" id="trip-bar">
+    <button class="trip-bar-btn" id="btn-start-route">Start Route</button>
   </div>
 
 </div>
