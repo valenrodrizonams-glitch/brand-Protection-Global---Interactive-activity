@@ -377,10 +377,29 @@
   </div>
 </div>
 
-<!-- Not ready yet -->
+<!-- Copycat summary video — wraps up the Triangle Pharmacy visit -->
 <div class="screen-overlay" id="screen-triangle-explain">
   <div class="screen-inner">
-    <div class="placeholder-video">*video here*</div>
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline>
+        <source src="videos/copycat.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="star-welcome">Next Stop</button>
+    </div>
+  </div>
+</div>
+
+<!-- Star Pharmacy — welcome video for the next stop on the route -->
+<div class="screen-overlay" id="screen-star-welcome">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline>
+        <source src="videos/star-welcome.mp4" type="video/mp4">
+      </video>
+    </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
     </div>
