@@ -151,12 +151,16 @@
     .trip-bar{ width: calc(100vw - 36px); }
   }
 
-  /* ---- pharmacy-visit screens (Triangle / Star flow) ---- */
+  /* ---- pharmacy-visit screens (Triangle / Star flow) ----
+     Shown/hidden via opacity (not display:none) so switching from one
+     full-screen video to the next crossfades smoothly instead of hard-cutting
+     through a blank frame. */
   .screen-overlay{
-    position:fixed; inset:0; z-index:60; display:none;
+    position:fixed; inset:0; z-index:60; display:flex; flex-direction:column;
     background: var(--bg-land); padding:26px 22px;
+    opacity:0; pointer-events:none; transition:opacity .5s ease;
   }
-  .screen-overlay.is-open{ display:flex; flex-direction:column; }
+  .screen-overlay.is-open{ opacity:1; pointer-events:auto; z-index:61; }
   .screen-inner{
     flex:1; min-height:0; width:100%; max-width:1100px; margin:0 auto;
     display:flex; flex-direction:column; gap:14px;
