@@ -438,7 +438,6 @@
     startBtn.classList.add("is-active");
     startBtn.textContent = "Clear Route";
     tripBar.classList.add("is-hidden");
-    bgAudio.pause();
     videoWithRoute.currentTime = 0;
     videoWithRoute.play();
     videoNoRoute.pause();
@@ -492,6 +491,10 @@
     hideRoute();
   }
   function openScreen(id){
+    // Once the visit moves into a full-screen pharmacy video (starting with
+    // the Triangle Pharmacy welcome video), the soft map hold-music stops —
+    // it only plays under the idle map and the with-route driving video.
+    bgAudio.pause();
     closeAllScreens();
     var el = document.getElementById("screen-" + id);
     if(!el) return;
