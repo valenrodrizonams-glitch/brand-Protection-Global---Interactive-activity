@@ -424,18 +424,30 @@
   var routeActive = false;
 
   // Very soft hold-music bed under the idle map (before a route starts).
-  // Browsers block un-muted autoplay until the visitor interacts with the
-  // page, so we try immediately and also retry on the very first pointer
-  // press anywhere, which reliably unlocks it.
+  // Browsers block un-muted autoplay until the visitor has interacted with
+  // the page, so the very first play() call on load is expected to fail
+  // silently. We keep retrying on every interaction (click/tap/key) — not
+  // just the first one — until it actually catches, then stop listening.
   var bgAudio = document.getElementById("bg-audio");
   bgAudio.volume = 0.1;
   function tryPlayBgAudio(){
     if(routeActive) return;
     var p = bgAudio.play();
-    if(p && p.catch) p.catch(function(){ /* still blocked; will retry on interaction */ });
+    if(p && p.catch) p.catch(function(){ /* still blocked; a later interaction will retry */ });
   }
   tryPlayBgAudio();
-  window.addEventListener("pointerdown", function(){ tryPlayBgAudio(); }, { once: true });
+  var UNLOCK_EVENTS = ["pointerdown", "click", "touchstart", "keydown"];
+  function unlockBgAudioOnInteraction(){
+    tryPlayBgAudio();
+    if(!bgAudio.paused){
+      UNLOCK_EVENTS.forEach(function(evt){
+        window.removeEventListener(evt, unlockBgAudioOnInteraction);
+      });
+    }
+  }
+  UNLOCK_EVENTS.forEach(function(evt){
+    window.addEventListener(evt, unlockBgAudioOnInteraction);
+  });
 
   function showRoute(){
     mapFrame.classList.add("is-active");
