@@ -146,31 +146,6 @@
     text-shadow: 0 1px 2px rgba(0,0,0,.25);
   }
 
-  /* Enter gate — browsers refuse to autoplay sound before the visitor has
-     clicked anywhere on the page at least once, so this one-tap "start"
-     screen is what makes the background music already be playing by the
-     time the title card and map appear. */
-  #enter-gate{
-    position:fixed; inset:0; z-index:200; cursor:pointer;
-    background: var(--bg-land);
-    display:flex; align-items:center; justify-content:center;
-    transition: opacity .4s ease;
-  }
-  #enter-gate.is-dismissed{ opacity:0; pointer-events:none; }
-  #enter-gate .enter-card{
-    padding:28px 34px; text-align:center; max-width:320px;
-  }
-  #enter-gate h1{
-    margin:0 0 6px; font-family:"Archivo",sans-serif; font-weight:800; font-size:19px;
-    letter-spacing:-.01em; color:var(--ink);
-  }
-  #enter-gate p{ margin:0 0 16px; font-size:12.5px; color:var(--ink-soft); }
-  #enter-gate .enter-btn{
-    padding:11px 22px; border:none; border-radius:9px; cursor:pointer;
-    background: var(--accent); color: var(--accent-ink); font:700 13px "Public Sans",sans-serif;
-    letter-spacing:.01em; animation: btn-pulse 1.4s ease-in-out infinite;
-  }
-
   @media (max-width:720px){
     .right-panel{ width: calc(100vw - 36px); }
     .trip-bar{ width: calc(100vw - 36px); }
@@ -239,15 +214,7 @@
 
 </style>
 
-</head><body><div id="enter-gate">
-  <div class="enter-card card">
-    <h1>CSI Opella route simulation</h1>
-    <p>Tap to begin — this turns on the map sound and background music.</p>
-    <button class="enter-btn" id="btn-enter">Start Simulation</button>
-  </div>
-</div>
-
-<div class="app">
+</head><body><div class="app">
   <div class="map-frame" id="map-frame">
     <video class="map-video no-route" id="video-no-route" autoplay muted loop playsinline>
       <source src="videos/map-no-route.mp4" type="video/mp4">
@@ -480,16 +447,6 @@
   }
   UNLOCK_EVENTS.forEach(function(evt){
     window.addEventListener(evt, unlockBgAudioOnInteraction);
-  });
-
-  // The one-tap "enter" gate: the visitor must tap it to get into the
-  // simulation at all, so this tap is guaranteed to count as the user
-  // gesture browsers require — by the time the map/title are revealed,
-  // the background music is already playing.
-  var enterGate = document.getElementById("enter-gate");
-  enterGate.addEventListener("click", function(){
-    tryPlayBgAudio();
-    enterGate.classList.add("is-dismissed");
   });
 
   function showRoute(){
