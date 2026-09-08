@@ -753,12 +753,12 @@
           revealed = true;
           syncOverlayToVideo(video, overlay);
           overlay.classList.add("is-visible");
-          // Freeze right here instead of letting playback continue to the
-          // real end of the file — some of these videos keep going with more
-          // dialogue after the "Do you want this product?" moment, so if the
-          // visitor takes a moment to choose, the picture would otherwise
-          // drift past it to something else.
-          video.pause();
+          // Note: the video is intentionally left playing underneath (never
+          // paused) all the way to its own natural end — pausing it here
+          // made playback look stuck/jerky. Screens that need the picture to
+          // stop changing while the visitor decides (Essentiale, Magne-B6)
+          // handle that by showing a still image on top of the video for
+          // this same window instead, via the optional .select-img below.
         }
       });
       function pick(btn, nextId){
