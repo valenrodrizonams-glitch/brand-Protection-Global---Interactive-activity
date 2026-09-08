@@ -192,6 +192,11 @@
   .hotspot:hover, .hotspot:focus-visible{ border-color: var(--route); background:rgba(255,120,210,.12); outline:none; }
   .hotspot-left{ left:9%; top:36%; width:24%; height:32%; }
   .hotspot-right{ left:41%; top:36%; width:24%; height:32%; }
+  /* Circle Pharmacy: the Yes/No pills in these videos sit together at the
+     bottom-left of the frame (not split across the left/right halves like
+     the Triangle selection screens), so these two override left/top/size. */
+  .hotspot-yn-left{ left:6%; top:74%; width:19%; height:14%; }
+  .hotspot-yn-right{ left:31%; top:74%; width:19%; height:14%; }
   .select-hotspot-layer.is-locked .hotspot{ pointer-events:none; cursor:default; }
   .select-hotspot-layer.is-locked .hotspot.is-picked{ border-color: var(--route); background:rgba(255,120,210,.12); }
 
@@ -415,17 +420,17 @@
 </div>
 
 <!-- Circle Pharmacy - Copycat Essentiale — Yes/No hotspots reveal over the video's
-     own on-screen Yes/No labels in the last 5 seconds; Yes = wrong pick, No = correct -->
+     own on-screen Yes/No labels in the last 2 seconds; Yes = wrong pick, No = correct -->
 <div class="screen-overlay" id="screen-circle-essentiale-context"
-     data-reveal-before-end="5" data-left-next="circle-essentiale-wrong" data-right-next="circle-essentiale-correct">
+     data-reveal-before-end="2" data-left-next="circle-essentiale-wrong" data-right-next="circle-essentiale-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline>
         <source src="videos/circle-essentiale-context.mp4" type="video/mp4">
       </video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <button class="hotspot hotspot-left" data-role="left" aria-label="Select Yes"></button>
-        <button class="hotspot hotspot-right" data-role="right" aria-label="Select No"></button>
+        <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select Yes"></button>
+        <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select No"></button>
       </div>
     </div>
     <div class="screen-nav">
@@ -466,15 +471,15 @@
 
 <!-- Circle Pharmacy - Copycat Magne-B6 — same Yes/No pattern; Yes = wrong pick, No = correct -->
 <div class="screen-overlay" id="screen-circle-magneb6-context"
-     data-reveal-before-end="5" data-left-next="circle-magneb6-wrong" data-right-next="circle-magneb6-correct">
+     data-reveal-before-end="2" data-left-next="circle-magneb6-wrong" data-right-next="circle-magneb6-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline>
         <source src="videos/circle-magneb6-context.mp4" type="video/mp4">
       </video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <button class="hotspot hotspot-left" data-role="left" aria-label="Select Yes"></button>
-        <button class="hotspot hotspot-right" data-role="right" aria-label="Select No"></button>
+        <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select Yes"></button>
+        <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select No"></button>
       </div>
     </div>
     <div class="screen-nav">
@@ -621,16 +626,45 @@
     // the Triangle Pharmacy welcome video), the soft map hold-music stops —
     // it only plays under the idle map and the with-route driving video.
     bgAudio.pause();
-    closeAllScreens();
     var el = document.getElementById("screen-" + id);
     if(!el) return;
-    el.classList.add("is-open");
     if(el._resetScreen) el._resetScreen();
     var v = el.querySelector(".scene-video");
+
+    // Reveal the new screen (crossfading it in via the .is-open opacity
+    // transition) only once its video is actually painting real frames.
+    // If we started the crossfade the instant we called v.play(), the video
+    // often has nothing decoded yet, so the incoming screen would flash in
+    // as a plain empty/black box for a beat before the real picture caught
+    // up — visible as a jarring "extra square" mid-transition. Waiting for
+    // playback to truly start (plus one extra paint) keeps both videos
+    // visibly in motion for the whole crossfade, so it reads as one
+    // continuous shot instead of a cut.
+    function reveal(){
+      // Close every OTHER screen — never touch "el" here, since its video
+      // was already started playing above; re-pausing it at this point
+      // would freeze the very screen we're about to reveal.
+      ALL_SCREENS.forEach(function(otherId){
+        if(otherId === id) return;
+        var other = document.getElementById("screen-" + otherId);
+        if(!other) return;
+        other.classList.remove("is-open");
+        pauseSceneVideo(other);
+      });
+      el.classList.add("is-open");
+    }
     if(v){
       v.currentTime = 0;
       var playResult = v.play();
-      if(playResult && playResult.catch) playResult.catch(function(){ /* autoplay blocked; ignore */ });
+      if(playResult && playResult.then){
+        playResult.then(function(){
+          requestAnimationFrame(function(){ requestAnimationFrame(reveal); });
+        }).catch(function(){ reveal(); /* autoplay blocked; reveal anyway */ });
+      } else {
+        reveal();
+      }
+    } else {
+      reveal();
     }
   }
 
