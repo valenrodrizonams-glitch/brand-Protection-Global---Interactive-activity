@@ -206,6 +206,15 @@
     opacity:0; pointer-events:none; transition:opacity .4s ease;
   }
   .scene-video-wrap .select-hotspot-layer.scene-overlay-image.is-visible{ opacity:1; pointer-events:auto; }
+  /* Freeze-frame image (Circle Pharmacy Essentiale/Magne-B6): a still of the
+     video's own "Do you want this product?" moment, sized to fill the same
+     box syncOverlayToVideo already computed for this overlay, so it sits
+     exactly flush over the video and is indistinguishable from it. This
+     replaces relying on the video's own last frame, which kept playing past
+     that moment (into more dialogue) if the visitor took a moment to choose. */
+  .select-hotspot-layer.scene-overlay-image .select-img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; pointer-events:none;
+  }
 
   .placeholder-video{
     flex:1; min-height:0; display:flex; align-items:center; justify-content:center;
@@ -429,6 +438,7 @@
         <source src="videos/circle-essentiale-context.mp4" type="video/mp4">
       </video>
       <div class="select-hotspot-layer scene-overlay-image">
+        <img class="select-img" alt="" src="images/select-essentiale.jpg" onerror="this.onerror=null;this.src='images/select-essentiale.png';">
         <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select Yes"></button>
         <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select No"></button>
       </div>
@@ -478,6 +488,7 @@
         <source src="videos/circle-magneb6-context.mp4" type="video/mp4">
       </video>
       <div class="select-hotspot-layer scene-overlay-image">
+        <img class="select-img" alt="" src="images/select-magneb6.jpg" onerror="this.onerror=null;this.src='images/select-magneb6.png';">
         <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select Yes"></button>
         <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select No"></button>
       </div>
@@ -742,6 +753,12 @@
           revealed = true;
           syncOverlayToVideo(video, overlay);
           overlay.classList.add("is-visible");
+          // Freeze right here instead of letting playback continue to the
+          // real end of the file — some of these videos keep going with more
+          // dialogue after the "Do you want this product?" moment, so if the
+          // visitor takes a moment to choose, the picture would otherwise
+          // drift past it to something else.
+          video.pause();
         }
       });
       function pick(btn, nextId){
