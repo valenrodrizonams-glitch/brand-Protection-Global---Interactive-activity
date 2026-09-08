@@ -524,6 +524,23 @@
     <div class="placeholder-video">*video here*</div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-welcome">Next Stop</button>
+    </div>
+  </div>
+</div>
+
+<!-- Diamond Pharmacy — welcome video for the next stop on the route. Nothing
+     built beyond this yet, so it just plays with a "Back to Map" nav; wire up
+     data-on-end / the next screen here once that content is ready. -->
+<div class="screen-overlay" id="screen-diamond-welcome">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline>
+        <source src="videos/diamond-welcome.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
     </div>
   </div>
 </div>
