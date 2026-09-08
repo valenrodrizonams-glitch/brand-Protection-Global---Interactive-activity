@@ -394,19 +394,129 @@
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="star-welcome">Next Stop</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-welcome">Next Stop</button>
     </div>
   </div>
 </div>
 
-<!-- Star Pharmacy — welcome video for the next stop on the route -->
-<div class="screen-overlay" id="screen-star-welcome">
+<!-- Circle Pharmacy — welcome video for the next stop on the route; auto-advances
+     into the Essentiale copycat scene when it ends, same as Triangle's welcome video -->
+<div class="screen-overlay" id="screen-circle-welcome" data-on-end="circle-essentiale-context">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline>
-        <source src="videos/star-welcome.mp4" type="video/mp4">
+        <source src="videos/circle-welcome.mp4" type="video/mp4">
       </video>
     </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+    </div>
+  </div>
+</div>
+
+<!-- Circle Pharmacy - Copycat Essentiale — Yes/No hotspots reveal over the video's
+     own on-screen Yes/No labels in the last 5 seconds; Yes = wrong pick, No = correct -->
+<div class="screen-overlay" id="screen-circle-essentiale-context"
+     data-reveal-before-end="5" data-left-next="circle-essentiale-wrong" data-right-next="circle-essentiale-correct">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline>
+        <source src="videos/circle-essentiale-context.mp4" type="video/mp4">
+      </video>
+      <div class="select-hotspot-layer scene-overlay-image">
+        <button class="hotspot hotspot-left" data-role="left" aria-label="Select Yes"></button>
+        <button class="hotspot hotspot-right" data-role="right" aria-label="Select No"></button>
+      </div>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+    </div>
+  </div>
+</div>
+
+<!-- Essentiale — wrong pick (Yes) -->
+<div class="screen-overlay" id="screen-circle-essentiale-wrong">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline>
+        <source src="videos/Essentiale-wrong.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-magneb6-context">Next Purchase</button>
+    </div>
+  </div>
+</div>
+
+<!-- Essentiale — correct pick (No) -->
+<div class="screen-overlay" id="screen-circle-essentiale-correct">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline>
+        <source src="videos/Essentiale-correct.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-magneb6-context">Next Purchase</button>
+    </div>
+  </div>
+</div>
+
+<!-- Circle Pharmacy - Copycat Magne-B6 — same Yes/No pattern; Yes = wrong pick, No = correct -->
+<div class="screen-overlay" id="screen-circle-magneb6-context"
+     data-reveal-before-end="5" data-left-next="circle-magneb6-wrong" data-right-next="circle-magneb6-correct">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline>
+        <source src="videos/circle-magneb6-context.mp4" type="video/mp4">
+      </video>
+      <div class="select-hotspot-layer scene-overlay-image">
+        <button class="hotspot hotspot-left" data-role="left" aria-label="Select Yes"></button>
+        <button class="hotspot hotspot-right" data-role="right" aria-label="Select No"></button>
+      </div>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+    </div>
+  </div>
+</div>
+
+<!-- Magne-B6 — wrong pick (Yes) -->
+<div class="screen-overlay" id="screen-circle-magneb6-wrong">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline>
+        <source src="videos/Magne-B6-wrong.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-explain">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- Magne-B6 — correct pick (No) -->
+<div class="screen-overlay" id="screen-circle-magneb6-correct">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline>
+        <source src="videos/Magne-B6-correct.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-explain">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- Not ready yet -->
+<div class="screen-overlay" id="screen-circle-explain">
+  <div class="screen-inner">
+    <div class="placeholder-video">*video here*</div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
     </div>
