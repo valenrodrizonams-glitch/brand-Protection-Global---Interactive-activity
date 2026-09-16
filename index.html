@@ -222,6 +222,28 @@
     color:var(--ink-soft); font:800 20px "Archivo",sans-serif; letter-spacing:.02em;
   }
 
+  /* Shown automatically over a .scene-video-wrap when its video (or a
+     select-img over it) fails to load — e.g. the file hasn't been uploaded
+     to videos/ or images/ yet — instead of a blank/broken box. */
+  .scene-video-wrap .media-missing{
+    position:absolute; inset:0; z-index:5; display:flex; align-items:center; justify-content:center;
+    background:var(--panel-bg); border:1px dashed var(--panel-border); border-radius:12px;
+    color:var(--ink-soft); font:800 18px "Archivo",sans-serif; letter-spacing:.02em; text-align:center; padding:16px;
+  }
+
+  /* Final "route complete" banner shown once the whole route finishes */
+  .route-complete-banner{
+    flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+    border-radius:16px; background:var(--panel-bg); border:1px solid var(--panel-border); padding:40px 24px; text-align:center;
+  }
+  .route-complete-check{
+    width:72px; height:72px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+    display:flex; align-items:center; justify-content:center; font:800 34px/1 "Archivo",sans-serif; flex:none;
+  }
+  .route-complete-title{
+    font:800 26px "Archivo",sans-serif; color:var(--ink); letter-spacing:.01em;
+  }
+
   @media (max-width:720px){
     .screen-overlay{ padding:16px 12px; }
   }
@@ -230,12 +252,8 @@
 
 </head><body><div class="app">
   <div class="map-frame" id="map-frame">
-    <video class="map-video no-route" id="video-no-route" autoplay muted loop playsinline>
-      <source src="videos/map-no-route.mp4" type="video/mp4">
-    </video>
-    <video class="map-video with-route" id="video-with-route" playsinline>
-      <source src="videos/map-with-route.mp4" type="video/mp4">
-    </video>
+    <video class="map-video no-route" id="video-no-route" autoplay muted loop playsinline src="videos/map-no-route.mp4"></video>
+    <video class="map-video with-route" id="video-with-route" playsinline src="videos/map-with-route.mp4"></video>
     <audio id="bg-audio" loop>
       <source src="Audio/Opella_OnHold.mp3" type="audio/mpeg">
     </audio>
@@ -288,9 +306,7 @@
 <div class="screen-overlay" id="screen-triangle-welcome" data-on-end="triangle-allegra-context">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/triangle-welcome.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/triangle-welcome.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
@@ -304,9 +320,7 @@
      data-reveal-before-end="5" data-left-next="triangle-allegra-correct" data-right-next="triangle-allegra-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/triangle-allegra-context.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/triangle-allegra-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
         <button class="hotspot hotspot-left" data-role="left" aria-label="Select Allegra"></button>
         <button class="hotspot hotspot-right" data-role="right" aria-label="Select the other product"></button>
@@ -322,13 +336,11 @@
 <div class="screen-overlay" id="screen-triangle-allegra-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/allegra-correct.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/allegra-correct.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="triangle-novalgina-context">Next Purchase</button>
+      <button class="nav-btn nav-btn-primary" data-action="triangle-enterogermina-context">Next Purchase</button>
     </div>
   </div>
 </div>
@@ -337,29 +349,25 @@
 <div class="screen-overlay" id="screen-triangle-allegra-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/allegra-wrong.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/allegra-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="triangle-novalgina-context">Next Purchase</button>
+      <button class="nav-btn nav-btn-primary" data-action="triangle-enterogermina-context">Next Purchase</button>
     </div>
   </div>
 </div>
 
-<!-- 5. Triangle Pharmacy - Copycat Novalgina — image 5.1 fades in the same way;
-     here right = Novalgina (-> 5.3, correct), left = the other box (-> 5.2, wrong) -->
-<div class="screen-overlay" id="screen-triangle-novalgina-context"
-     data-reveal-before-end="5" data-left-next="triangle-novalgina-wrong" data-right-next="triangle-novalgina-correct">
+<!-- 5. Triangle Pharmacy - Copycat Enterogermina — image 5.1 fades in the same way;
+     here right = Enterogermina (-> 5.3, correct), left = the other box (-> 5.2, wrong) -->
+<div class="screen-overlay" id="screen-triangle-enterogermina-context"
+     data-reveal-before-end="5" data-left-next="triangle-enterogermina-wrong" data-right-next="triangle-enterogermina-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/triangle-novalgina-context.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/triangle-enterogermina-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
         <button class="hotspot hotspot-left" data-role="left" aria-label="Select the other product"></button>
-        <button class="hotspot hotspot-right" data-role="right" aria-label="Select Novalgina"></button>
+        <button class="hotspot hotspot-right" data-role="right" aria-label="Select Enterogermina"></button>
       </div>
     </div>
     <div class="screen-nav">
@@ -368,13 +376,11 @@
   </div>
 </div>
 
-<!-- 5.3 — correct Novalgina pick -->
-<div class="screen-overlay" id="screen-triangle-novalgina-correct">
+<!-- 5.3 — correct Enterogermina pick -->
+<div class="screen-overlay" id="screen-triangle-enterogermina-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/novalgina-correct.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/enterogermina-correct.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
@@ -383,13 +389,11 @@
   </div>
 </div>
 
-<!-- 5.2 — wrong Novalgina pick -->
-<div class="screen-overlay" id="screen-triangle-novalgina-wrong">
+<!-- 5.2 — wrong Enterogermina pick -->
+<div class="screen-overlay" id="screen-triangle-enterogermina-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/novalgina-wrong.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/enterogermina-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
@@ -402,9 +406,7 @@
 <div class="screen-overlay" id="screen-triangle-explain">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/copycat.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/copycat.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
@@ -418,9 +420,7 @@
 <div class="screen-overlay" id="screen-circle-welcome" data-on-end="circle-essentiale-context">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/circle-welcome.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/circle-welcome.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
@@ -434,11 +434,9 @@
      data-reveal-before-end="2" data-left-next="circle-essentiale-wrong" data-right-next="circle-essentiale-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/circle-essentiale-context.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/circle-essentiale-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" alt="" src="images/select-essentiale.jpg" onerror="this.onerror=null;this.src='images/select-essentiale.png';">
+        <img class="select-img" alt="" src="images/select-essentiale.jpg" data-fallback-src="images/select-essentiale.png">
         <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select Yes"></button>
         <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select No"></button>
       </div>
@@ -453,9 +451,7 @@
 <div class="screen-overlay" id="screen-circle-essentiale-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/Essentiale-wrong.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/Essentiale-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
@@ -468,9 +464,7 @@
 <div class="screen-overlay" id="screen-circle-essentiale-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/Essentiale-correct.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/Essentiale-correct.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
@@ -484,11 +478,9 @@
      data-reveal-before-end="2" data-left-next="circle-magneb6-wrong" data-right-next="circle-magneb6-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/circle-magneb6-context.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/circle-magneb6-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" alt="" src="images/select-magneb6.jpg" onerror="this.onerror=null;this.src='images/select-magneb6.png';">
+        <img class="select-img" alt="" src="images/select-magneb6.jpg" data-fallback-src="images/select-magneb6.png">
         <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select Yes"></button>
         <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select No"></button>
       </div>
@@ -503,9 +495,7 @@
 <div class="screen-overlay" id="screen-circle-magneb6-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/Magne-B6-wrong.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/Magne-B6-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
@@ -518,9 +508,7 @@
 <div class="screen-overlay" id="screen-circle-magneb6-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/Magne-B6-correct.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/Magne-B6-correct.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
@@ -529,10 +517,12 @@
   </div>
 </div>
 
-<!-- Not ready yet -->
+<!-- Smuggling summary video — wraps up the Circle Pharmacy visit -->
 <div class="screen-overlay" id="screen-circle-explain">
   <div class="screen-inner">
-    <div class="placeholder-video">*video here*</div>
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline src="videos/smuggling.mp4"></video>
+    </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
       <button class="nav-btn nav-btn-primary" data-action="diamond-welcome">Next Stop</button>
@@ -540,18 +530,132 @@
   </div>
 </div>
 
-<!-- Diamond Pharmacy — welcome video for the next stop on the route. Nothing
-     built beyond this yet, so it just plays with a "Back to Map" nav; wire up
-     data-on-end / the next screen here once that content is ready. -->
-<div class="screen-overlay" id="screen-diamond-welcome">
+<!-- Diamond Pharmacy — welcome video for the next stop on the route; auto-advances
+     into the Qunol copycat scene when it ends, same as the other welcome videos -->
+<div class="screen-overlay" id="screen-diamond-welcome" data-on-end="diamond-qunol-context">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline>
-        <source src="videos/diamond-welcome.mp4" type="video/mp4">
-      </video>
+      <video class="scene-video" playsinline src="videos/diamond-welcome.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
+    </div>
+  </div>
+</div>
+
+<!-- Diamond Pharmacy - Copycat Qunol — Yes/No-style hotspots reveal over the video's
+     own on-screen product choice in the last 2 seconds; left = correct, right = wrong -->
+<div class="screen-overlay" id="screen-diamond-qunol-context"
+     data-reveal-before-end="2" data-left-next="diamond-qunol-correct" data-right-next="diamond-qunol-wrong">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline src="videos/diamond-qunol-context.mp4"></video>
+      <div class="select-hotspot-layer scene-overlay-image">
+        <img class="select-img" alt="" src="images/select-qunol.jpg" data-fallback-src="images/select-qunol.png">
+        <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select Qunol"></button>
+        <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select the other product"></button>
+      </div>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+    </div>
+  </div>
+</div>
+
+<!-- Qunol — correct pick (left) -->
+<div class="screen-overlay" id="screen-diamond-qunol-correct">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline src="videos/qunol-correct.mp4"></video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-buscapina-context">Next Purchase</button>
+    </div>
+  </div>
+</div>
+
+<!-- Qunol — wrong pick (right) -->
+<div class="screen-overlay" id="screen-diamond-qunol-wrong">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline src="videos/qunol-wrong.mp4"></video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-buscapina-context">Next Purchase</button>
+    </div>
+  </div>
+</div>
+
+<!-- Diamond Pharmacy - Copycat Buscapina — same pattern; here left = wrong, right = correct -->
+<div class="screen-overlay" id="screen-diamond-buscapina-context"
+     data-reveal-before-end="2" data-left-next="diamond-buscapina-wrong" data-right-next="diamond-buscapina-correct">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline src="videos/diamond-buscapina-context.mp4"></video>
+      <div class="select-hotspot-layer scene-overlay-image">
+        <img class="select-img" alt="" src="images/select-buscapina.jpg" data-fallback-src="images/select-buscapina.png">
+        <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select the other product"></button>
+        <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select Buscapina"></button>
+      </div>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+    </div>
+  </div>
+</div>
+
+<!-- Buscapina — wrong pick (left) -->
+<div class="screen-overlay" id="screen-diamond-buscapina-wrong">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline src="videos/buscapina-wrong.mp4"></video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-explain">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- Buscapina — correct pick (right) -->
+<div class="screen-overlay" id="screen-diamond-buscapina-correct">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline src="videos/buscapina-correct.mp4"></video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-explain">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- Counterfeiting summary video — wraps up the Diamond Pharmacy visit and the
+     whole route; auto-advances into the route-complete banner when it ends,
+     since there is no further stop after Diamond Pharmacy. -->
+<div class="screen-overlay" id="screen-diamond-explain" data-on-end="route-complete">
+  <div class="screen-inner">
+    <div class="scene-video-wrap">
+      <video class="scene-video" playsinline src="videos/counterfeiting.mp4"></video>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn" data-action="map">Back to Map</button>
+    </div>
+  </div>
+</div>
+
+<!-- Route complete — the whole training route ends here, shown automatically
+     once the counterfeiting video finishes. -->
+<div class="screen-overlay" id="screen-route-complete">
+  <div class="screen-inner">
+    <div class="route-complete-banner">
+      <div class="route-complete-check">&#10003;</div>
+      <div class="route-complete-title">Route Completed Successfully!</div>
+    </div>
+    <div class="screen-nav">
+      <button class="nav-btn nav-btn-primary" data-action="map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -633,6 +737,17 @@
     function(el){ return el.id.replace(/^screen-/, ""); }
   );
 
+  // Graceful fallback for media that hasn't been uploaded yet: instead of a
+  // blank black box (video) or a broken-image icon (select-img), show a
+  // plain "Falta por video" / "Falta por foto" note over that screen's video
+  // area. Defined up here so openScreen (below) can call it directly.
+  function showMediaMissing(wrap, label){
+    if(!wrap || wrap.querySelector(".media-missing")) return;
+    var msg = document.createElement("div");
+    msg.className = "media-missing";
+    msg.textContent = label;
+    wrap.appendChild(msg);
+  }
   function pauseSceneVideo(screenEl){
     var v = screenEl.querySelector(".scene-video");
     if(v) v.pause();
@@ -668,7 +783,10 @@
     // playback to truly start (plus one extra paint) keeps both videos
     // visibly in motion for the whole crossfade, so it reads as one
     // continuous shot instead of a cut.
+    var revealed = false;
     function reveal(){
+      if(revealed) return;
+      revealed = true;
       // Close every OTHER screen — never touch "el" here, since its video
       // was already started playing above; re-pausing it at this point
       // would freeze the very screen we're about to reveal.
@@ -688,9 +806,20 @@
         playResult.then(function(){
           requestAnimationFrame(function(){ requestAnimationFrame(reveal); });
         }).catch(function(){ reveal(); /* autoplay blocked; reveal anyway */ });
-      } else {
-        reveal();
       }
+      // Safety net: if the video file is missing, still loading slowly, or
+      // otherwise never resolves play(), don't leave the visit stuck on the
+      // previous screen forever — reveal this one anyway after a short wait.
+      // This same check also catches a missing/broken video file: by 1.2s in,
+      // a real video has at least started buffering (readyState > 0); one
+      // that never will (404, wrong filename, wrong case, ...) is the cue to
+      // show "Falta por video" instead of leaving a blank box on screen.
+      setTimeout(function(){
+        reveal();
+        if(v.error || v.readyState === 0){
+          showMediaMissing(v.closest(".scene-video-wrap"), "Falta por video");
+        }
+      }, 1200);
     } else {
       reveal();
     }
@@ -785,6 +914,32 @@
         else openScreen(action);
       });
     });
+  });
+
+  // Extra safety net: catches a video that fails LATER (e.g. the network
+  // drops mid-visit), on top of the check openScreen already does the
+  // moment a screen opens.
+  document.querySelectorAll(".scene-video").forEach(function(video){
+    video.addEventListener("error", function(){
+      showMediaMissing(video.closest(".scene-video-wrap"), "Falta por video");
+    }, true);
+  });
+  function handleImgFallback(img){
+    var fallback = img.getAttribute("data-fallback-src");
+    if(fallback){
+      img.removeAttribute("data-fallback-src");
+      img.src = fallback;
+    } else {
+      img.style.display = "none";
+      showMediaMissing(img.closest(".scene-video-wrap"), "Falta por foto");
+    }
+  }
+  document.querySelectorAll(".select-img").forEach(function(img){
+    // If the image already failed before this listener was attached (a fast
+    // 404), catch it now instead of waiting for an 'error' event that has
+    // already happened.
+    if(img.complete && img.naturalWidth === 0){ handleImgFallback(img); return; }
+    img.addEventListener("error", function(){ handleImgFallback(img); });
   });
 
 })();
