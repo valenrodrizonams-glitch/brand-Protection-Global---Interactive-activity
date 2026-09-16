@@ -212,7 +212,13 @@
     position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
     opacity:0; pointer-events:none; transition:opacity .4s ease;
   }
-  .scene-video-wrap .select-hotspot-layer.scene-overlay-image.is-visible{ opacity:1; pointer-events:auto; }
+  /* pointer-events only re-enabled while the screen itself is actually open —
+     otherwise, after leaving a screen via "Back to Map" (which doesn't reset
+     .is-visible), its still-"visible" hotspot layer would sit invisibly on
+     top of the map, in the exact same centered spot as the trip-bar, and
+     silently swallow clicks meant for the Start Route button underneath. */
+  .screen-overlay.is-open .scene-video-wrap .select-hotspot-layer.scene-overlay-image.is-visible{ opacity:1; pointer-events:auto; }
+  .scene-video-wrap .select-hotspot-layer.scene-overlay-image.is-visible{ opacity:1; }
   /* Freeze-frame image (Circle Pharmacy Essentiale/Magne-B6): a still of the
      video's own "Do you want this product?" moment, sized to fill the same
      box syncOverlayToVideo already computed for this overlay, so it sits
@@ -329,6 +335,7 @@
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline src="videos/triangle-allegra-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
+        <img class="select-img" alt="" src="images/select-allegra.jpg" data-fallback-src="images/select-allegra.png">
         <button class="hotspot hotspot-left" data-role="left" aria-label="Select Allegra"></button>
         <button class="hotspot hotspot-right" data-role="right" aria-label="Select the other product"></button>
       </div>
@@ -373,6 +380,7 @@
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline src="videos/triangle-enterogermina-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
+        <img class="select-img" alt="" src="images/select-enterogermina.jpg" data-fallback-src="images/select-enterogermina.png">
         <button class="hotspot hotspot-left" data-role="left" aria-label="Select the other product"></button>
         <button class="hotspot hotspot-right" data-role="right" aria-label="Select Enterogermina"></button>
       </div>
@@ -649,6 +657,7 @@
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="route-complete">Finish Route</button>
     </div>
   </div>
 </div>
@@ -755,6 +764,16 @@
     msg.textContent = label;
     wrap.appendChild(msg);
   }
+  // Self-heal: if a video we (maybe wrongly) flagged as missing actually
+  // does start playing a moment later -- perfectly normal on a real
+  // connection, where buffering can take a few seconds -- remove the note
+  // instead of leaving a stale "Falta por video" sitting over a working
+  // video.
+  function clearMediaMissing(wrap){
+    if(!wrap) return;
+    var msg = wrap.querySelector(".media-missing");
+    if(msg) msg.remove();
+  }
   function pauseSceneVideo(screenEl){
     var v = screenEl.querySelector(".scene-video");
     if(v) v.pause();
@@ -765,6 +784,7 @@
       if(!el) return;
       el.classList.remove("is-open");
       pauseSceneVideo(el);
+      if(el._resetScreen) el._resetScreen();
     });
   }
   function backToMap(){
@@ -814,19 +834,26 @@
           requestAnimationFrame(function(){ requestAnimationFrame(reveal); });
         }).catch(function(){ reveal(); /* autoplay blocked; reveal anyway */ });
       }
-      // Safety net: if the video file is missing, still loading slowly, or
-      // otherwise never resolves play(), don't leave the visit stuck on the
-      // previous screen forever — reveal this one anyway after a short wait.
-      // This same check also catches a missing/broken video file: by 1.2s in,
-      // a real video has at least started buffering (readyState > 0); one
-      // that never will (404, wrong filename, wrong case, ...) is the cue to
-      // show "Falta por video" instead of leaving a blank box on screen.
+      // Safety net #1: if play() never resolves (a real device quietly
+      // refusing autoplay, etc.), don't leave the visit stuck on the
+      // previous screen forever — reveal this one anyway after a short
+      // wait. This is purely about not getting stuck; it says nothing
+      // about whether the media is actually missing, since a real video
+      // over a real connection can easily still be buffering (readyState
+      // 0) a second in — that's normal, not an error.
+      setTimeout(reveal, 1200);
+      // Safety net #2: missing-media detection, kept deliberately patient.
+      // A genuine 404 fires the 'error' listener (wired up below) almost
+      // immediately, so it doesn't need this long wait to be caught. This
+      // longer check exists only for the rarer case where a file never
+      // errors AND never loads at all — so it waits long enough that a
+      // real video buffering on a real connection has every chance to
+      // start before being mistaken for missing.
       setTimeout(function(){
-        reveal();
         if(v.error || v.readyState === 0){
           showMediaMissing(v.closest(".scene-video-wrap"), "Falta por video");
         }
-      }, 1200);
+      }, 8000);
     } else {
       reveal();
     }
@@ -930,6 +957,9 @@
     video.addEventListener("error", function(){
       showMediaMissing(video.closest(".scene-video-wrap"), "Falta por video");
     }, true);
+    video.addEventListener("playing", function(){
+      clearMediaMissing(video.closest(".scene-video-wrap"));
+    });
   });
   function handleImgFallback(img){
     var fallback = img.getAttribute("data-fallback-src");
