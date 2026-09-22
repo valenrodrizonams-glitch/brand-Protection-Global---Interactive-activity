@@ -273,7 +273,7 @@
   </div>
 
   <div class="title-card card">
-    <h1>Brand Protection Route</h1>
+    <h1>CSI Opella route simulation</h1>
     <span class="badge3d">MAP VIEW</span>
   </div>
 
@@ -721,6 +721,16 @@
     videoWithRoute.play();
     videoNoRoute.pause();
     routeActive = true;
+    // Get a head start on the very first pharmacy-visit video while the
+    // driving video plays, the same way each screen preloads what comes
+    // after it (see preloadVideo below) -- otherwise this first one has no
+    // earlier screen to have started it early.
+    var welcomeVideo = document.querySelector("#screen-triangle-welcome .scene-video");
+    if(welcomeVideo && welcomeVideo.readyState === 0 && !welcomeVideo.hasAttribute("data-preloading")){
+      welcomeVideo.setAttribute("data-preloading", "1");
+      welcomeVideo.preload = "auto";
+      welcomeVideo.load();
+    }
   }
   function hideRoute(){
     mapFrame.classList.remove("is-active");
@@ -778,6 +788,38 @@
     var v = screenEl.querySelector(".scene-video");
     if(v) v.pause();
   }
+
+  // Get a head start on whichever video(s) might be needed right after the
+  // one the visitor is watching now, instead of only starting to fetch a
+  // video the instant its screen opens. On a real connection (as opposed to
+  // instant local testing) that first request is exactly what shows up as a
+  // stall/black moment when jumping to the next screen -- giving the likely
+  // next video the last several seconds of the current one to buffer in the
+  // background removes most of that wait.
+  function preloadVideo(nextId){
+    if(!nextId || nextId === "map") return;
+    var nextEl = document.getElementById("screen-" + nextId);
+    if(!nextEl) return;
+    var nv = nextEl.querySelector(".scene-video");
+    if(!nv || nv.readyState > 0 || nv.hasAttribute("data-preloading")) return;
+    nv.setAttribute("data-preloading", "1");
+    nv.preload = "auto";
+    nv.load();
+  }
+  function preloadLikelyNext(screenEl){
+    var ids = [];
+    var onEnd = screenEl.getAttribute("data-on-end");
+    if(onEnd) ids.push(onEnd);
+    var leftNext = screenEl.getAttribute("data-left-next");
+    if(leftNext) ids.push(leftNext);
+    var rightNext = screenEl.getAttribute("data-right-next");
+    if(rightNext) ids.push(rightNext);
+    screenEl.querySelectorAll("[data-action]").forEach(function(btn){
+      var action = btn.getAttribute("data-action");
+      if(action) ids.push(action);
+    });
+    ids.forEach(preloadVideo);
+  }
   function closeAllScreens(){
     ALL_SCREENS.forEach(function(id){
       var el = document.getElementById("screen-" + id);
@@ -799,6 +841,7 @@
     var el = document.getElementById("screen-" + id);
     if(!el) return;
     if(el._resetScreen) el._resetScreen();
+    preloadLikelyNext(el);
     var v = el.querySelector(".scene-video");
 
     // Reveal the new screen (crossfading it in via the .is-open opacity
