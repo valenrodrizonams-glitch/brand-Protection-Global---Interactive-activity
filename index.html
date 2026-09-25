@@ -261,9 +261,67 @@
     .screen-overlay{ padding:16px 12px; }
   }
 
+  /* Language picker — the very first thing shown, above everything else
+     (including the map underneath, which is already idling behind it).
+     Only English actually proceeds for now; Spanish/Portuguese just show a
+     short note, since those video sets don't exist yet. */
+  .language-select-overlay{
+    position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center;
+    background: var(--green-900); padding:24px;
+    opacity:1; pointer-events:auto; transition:opacity .4s ease;
+  }
+  .language-select-overlay.is-hidden{ opacity:0; pointer-events:none; }
+  .language-select-inner{
+    max-width:420px; width:100%; text-align:center;
+    display:flex; flex-direction:column; gap:18px; align-items:center;
+  }
+  .language-select-title{
+    margin:0; font-family:"Archivo",sans-serif; font-weight:800; font-size:22px; color:var(--warm-white);
+  }
+  .language-select-buttons{ display:flex; flex-direction:column; gap:12px; width:100%; }
+  .language-btn{
+    width:100%; padding:14px 16px; border:none; border-radius:9px; cursor:pointer;
+    background: var(--warm-white); color: var(--green-900); font:700 15px "Public Sans",sans-serif;
+    letter-spacing:.01em; transition:filter .15s ease, transform .15s ease;
+  }
+  .language-btn:hover{ filter:brightness(1.08); }
+  .language-unavailable-msg{
+    display:none; color: var(--warm-white); font:600 13px "Public Sans",sans-serif;
+    background: rgba(255,255,255,.1); padding:10px 14px; border-radius:8px;
+  }
+  .language-unavailable-msg.is-visible{ display:block; }
+
+  /* Small corner escape hatch back to the language picker, in case the
+     wrong one got picked -- only makes sense before the route starts, so
+     it hides the same way the trip-bar does once "Start Route" is clicked. */
+  .change-language-btn{
+    position:fixed; left:16px; bottom:16px; z-index:10;
+    padding:8px 14px; border:none; border-radius:8px; cursor:pointer;
+    background: rgba(4,43,11,.08); color: var(--ink); font:600 12px "Public Sans",sans-serif;
+    letter-spacing:.01em; transition:filter .15s ease, background-color .15s ease;
+  }
+  .change-language-btn:hover{ background: rgba(4,43,11,.16); }
+  .change-language-btn.is-hidden{ display:none; }
+
 </style>
 
-</head><body><div class="app">
+<!-- Language picker — shown first, before the map. Only English proceeds
+     for now; Spanish/Portuguese show a "not available yet" note instead,
+     since those video sets don't exist yet. Once they do, this is the
+     place to route to language-specific video sets. -->
+</head><body><div class="language-select-overlay" id="language-select">
+  <div class="language-select-inner">
+    <h2 class="language-select-title">Select Language</h2>
+    <div class="language-select-buttons">
+      <button class="language-btn" data-lang="en">English</button>
+      <button class="language-btn" data-lang="es">Spanish</button>
+      <button class="language-btn" data-lang="pt">Portuguese</button>
+    </div>
+    <div class="language-unavailable-msg" id="language-unavailable-msg">This language is not available yet. Please select English to continue.</div>
+  </div>
+</div>
+
+<div class="app">
   <div class="map-frame" id="map-frame">
     <video class="map-video no-route" id="video-no-route" autoplay muted loop playsinline src="videos/map-no-route.mp4"></video>
     <video class="map-video with-route" id="video-with-route" playsinline src="videos/map-with-route.mp4"></video>
@@ -312,6 +370,8 @@
   <div class="trip-bar card" id="trip-bar">
     <button class="trip-bar-btn" id="btn-start-route">Start Route</button>
   </div>
+
+  <button class="change-language-btn" id="btn-change-language">Change Language</button>
 
 </div>
 
@@ -692,6 +752,33 @@
   var startBtn = document.getElementById("btn-start-route");
   var routeActive = false;
 
+  // Language picker — shown first, before anything else on the page.
+  // Only English actually proceeds right now; Spanish/Portuguese just
+  // reveal a short note instead, since those video sets don't exist yet.
+  // The map underneath keeps idling behind this the whole time, so once
+  // English is picked it's just already there, ready to go.
+  var languageSelect = document.getElementById("language-select");
+  var languageUnavailableMsg = document.getElementById("language-unavailable-msg");
+  var changeLanguageBtn = document.getElementById("btn-change-language");
+  languageSelect.querySelectorAll(".language-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var lang = btn.getAttribute("data-lang");
+      if(lang === "en"){
+        languageSelect.classList.add("is-hidden");
+      } else {
+        languageUnavailableMsg.classList.add("is-visible");
+      }
+    });
+  });
+  // Small escape hatch in the corner of the map, in case the wrong language
+  // got picked -- only relevant before the route starts (see showRoute /
+  // hideRoute below, which hide and reveal this button the same way they
+  // do the trip-bar).
+  changeLanguageBtn.addEventListener("click", function(){
+    languageUnavailableMsg.classList.remove("is-visible");
+    languageSelect.classList.remove("is-hidden");
+  });
+
   // Very soft hold-music bed under the idle map (before a route starts).
   // Browsers block un-muted autoplay until the visitor has interacted with
   // the page, so the very first play() call on load is expected to fail
@@ -723,6 +810,7 @@
     startBtn.classList.add("is-active");
     startBtn.textContent = "Clear Route";
     tripBar.classList.add("is-hidden");
+    changeLanguageBtn.classList.add("is-hidden");
     videoWithRoute.currentTime = 0;
     videoWithRoute.play();
     videoNoRoute.pause();
@@ -743,6 +831,7 @@
     startBtn.classList.remove("is-active");
     startBtn.textContent = "Start Route";
     tripBar.classList.remove("is-hidden");
+    changeLanguageBtn.classList.remove("is-hidden");
     videoNoRoute.currentTime = 0;
     videoNoRoute.play();
     videoWithRoute.pause();
