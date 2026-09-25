@@ -432,7 +432,13 @@
 
 <!-- Circle Pharmacy — welcome video for the next stop on the route; auto-advances
      into the Essentiale copycat scene when it ends, same as Triangle's welcome video -->
-<div class="screen-overlay" id="screen-circle-welcome" data-on-end="circle-essentiale-context">
+<div class="screen-overlay" id="screen-circle-welcome" data-on-end="circle-magneb6-context">
+     <!-- Essentiale temporarily skipped for this run: circle-welcome now
+          auto-advances straight to circle-magneb6-context. The Essentiale
+          screens (circle-essentiale-context / -correct / -wrong) below are
+          untouched and still fully wired up -- just unreachable from the
+          normal flow while this points past them. To bring Essentiale back,
+          change data-on-end above back to "circle-essentiale-context". -->
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline src="videos/circle-welcome.mp4"></video>
