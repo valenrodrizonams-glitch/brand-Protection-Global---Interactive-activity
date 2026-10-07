@@ -263,8 +263,10 @@
 
   /* Language picker — the very first thing shown, above everything else
      (including the map underneath, which is already idling behind it).
-     Only English actually proceeds for now; Spanish/Portuguese just show a
-     short note, since those video sets don't exist yet. */
+     English, Spanish and Portuguese all proceed into the map; each one
+     points every video/image at its own videos/<LANG>/ and images/<LANG>/
+     subfolder and switches all translatable text (see applyMediaLanguage /
+     applyTextLanguage in the script below). */
   .language-select-overlay{
     position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center;
     background: var(--green-900); padding:24px;
@@ -285,11 +287,6 @@
     letter-spacing:.01em; transition:filter .15s ease, transform .15s ease;
   }
   .language-btn:hover{ filter:brightness(1.08); }
-  .language-unavailable-msg{
-    display:none; color: var(--warm-white); font:600 13px "Public Sans",sans-serif;
-    background: rgba(255,255,255,.1); padding:10px 14px; border-radius:8px;
-  }
-  .language-unavailable-msg.is-visible{ display:block; }
 
   /* Small corner escape hatch back to the language picker, in case the
      wrong one got picked -- only makes sense before the route starts, so
@@ -305,10 +302,10 @@
 
 </style>
 
-<!-- Language picker — shown first, before the map. Only English proceeds
-     for now; Spanish/Portuguese show a "not available yet" note instead,
-     since those video sets don't exist yet. Once they do, this is the
-     place to route to language-specific video sets. -->
+<!-- Language picker — shown first, before the map. English, Spanish and
+     Portuguese all work: each points every video/image at its own
+     videos/<LANG>/ and images/<LANG>/ subfolder (same filenames, same
+     order as English) and switches all translatable button/info text. -->
 </head><body><div class="language-select-overlay" id="language-select">
   <div class="title-card card">
     <h1>Brand Protection Route</h1>
@@ -318,54 +315,53 @@
     <div class="language-select-buttons">
       <button class="language-btn" data-lang="en">English</button>
       <button class="language-btn" data-lang="es">Spanish</button>
-      <button class="language-btn" data-lang="pt">Portuguese</button>
+      <button class="language-btn" data-lang="po">Portuguese</button>
     </div>
-    <div class="language-unavailable-msg" id="language-unavailable-msg">This language is not available yet. Please select English to continue.</div>
   </div>
 </div>
 
 <div class="app">
   <div class="map-frame" id="map-frame">
-    <video class="map-video no-route" id="video-no-route" autoplay muted loop playsinline src="videos/map-no-route.mp4"></video>
-    <video class="map-video with-route" id="video-with-route" playsinline src="videos/map-with-route.mp4"></video>
+    <video class="map-video no-route" id="video-no-route" autoplay muted loop playsinline data-video="map-no-route.mp4"></video>
+    <video class="map-video with-route" id="video-with-route" playsinline data-video="map-with-route.mp4"></video>
     <audio id="bg-audio" loop>
       <source src="Audio/Opella_OnHold.mp3" type="audio/mpeg">
     </audio>
   </div>
 
   <div class="title-card card">
-    <h1>Brand Protection Route</h1>
-    <span class="badge3d">MAP VIEW</span>
+    <h1 data-i18n="title">Brand Protection Route</h1>
+    <span class="badge3d" data-i18n="badge_map_view">MAP VIEW</span>
   </div>
 
   <div class="right-panel">
     <div class="search-bar card" aria-hidden="true">
       <span class="icon-search">&#128269;</span>
-      <span class="search-text">New Trade Visit</span>
+      <span class="search-text" data-i18n="search_new_trade_visit">New Trade Visit</span>
       <span class="icon-send">&#10148;</span>
     </div>
 
     <div class="route-banner card">
-      <h3>Pharmacy Visit Route</h3>
+      <h3 data-i18n="route_banner_title">Pharmacy Visit Route</h3>
       <div class="route-stop">
         <span class="stop-marker"><span class="stop-dot"></span></span>
-        <span class="stop-label">Opella Healthcare Colombia</span>
+        <span class="stop-label" data-i18n="stop_opella">Opella Healthcare Colombia</span>
       </div>
       <div class="route-stop">
         <span class="stop-marker"><span class="stop-dot"></span></span>
-        <span class="stop-label">Triangle Pharmacy</span>
+        <span class="stop-label" data-i18n="stop_triangle">Triangle Pharmacy</span>
       </div>
       <div class="route-stop">
         <span class="stop-marker"><span class="stop-dot"></span></span>
-        <span class="stop-label">Star Pharmacy</span>
+        <span class="stop-label" data-i18n="stop_star">Star Pharmacy</span>
       </div>
       <div class="route-stop">
         <span class="stop-marker"><span class="stop-dot"></span></span>
-        <span class="stop-label">Circle Pharmacy</span>
+        <span class="stop-label" data-i18n="stop_circle">Circle Pharmacy</span>
       </div>
       <div class="route-stop is-destination">
         <span class="stop-marker"><span class="stop-dot"></span></span>
-        <span class="stop-label">Opella Healthcare Colombia</span>
+        <span class="stop-label" data-i18n="stop_opella">Opella Healthcare Colombia</span>
       </div>
     </div>
   </div>
@@ -374,7 +370,7 @@
     <button class="trip-bar-btn" id="btn-start-route">Start Route</button>
   </div>
 
-  <button class="change-language-btn" id="btn-change-language">Change Language</button>
+  <button class="change-language-btn" id="btn-change-language" data-i18n="btn_change_language">Change Language</button>
 
 </div>
 
@@ -382,10 +378,10 @@
 <div class="screen-overlay" id="screen-triangle-welcome" data-on-end="triangle-allegra-context">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/triangle-welcome.mp4"></video>
+      <video class="scene-video" playsinline data-video="triangle-welcome.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -396,15 +392,15 @@
      data-reveal-before-end="5" data-left-next="triangle-allegra-correct" data-right-next="triangle-allegra-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/triangle-allegra-context.mp4"></video>
+      <video class="scene-video" playsinline data-video="triangle-allegra-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" alt="" src="images/select-allegra.jpg" data-fallback-src="images/select-allegra.png">
-        <button class="hotspot hotspot-left" data-role="left" aria-label="Select Allegra"></button>
-        <button class="hotspot hotspot-right" data-role="right" aria-label="Select the other product"></button>
+        <img class="select-img" alt="" data-img="select-allegra.jpg" data-img-fallback="select-allegra.png">
+        <button class="hotspot hotspot-left" data-role="left" data-i18n-aria="aria_select_allegra" aria-label="Select Allegra"></button>
+        <button class="hotspot hotspot-right" data-role="right" data-i18n-aria="aria_select_other" aria-label="Select the other product"></button>
       </div>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -413,11 +409,11 @@
 <div class="screen-overlay" id="screen-triangle-allegra-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/allegra-correct.mp4"></video>
+      <video class="scene-video" playsinline data-video="allegra-correct.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="triangle-enterogermina-context">Next Purchase</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="triangle-enterogermina-context" data-i18n="nav_next_purchase">Next Purchase</button>
     </div>
   </div>
 </div>
@@ -426,11 +422,11 @@
 <div class="screen-overlay" id="screen-triangle-allegra-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/allegra-wrong.mp4"></video>
+      <video class="scene-video" playsinline data-video="allegra-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="triangle-enterogermina-context">Next Purchase</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="triangle-enterogermina-context" data-i18n="nav_next_purchase">Next Purchase</button>
     </div>
   </div>
 </div>
@@ -441,15 +437,15 @@
      data-reveal-before-end="5" data-left-next="triangle-enterogermina-wrong" data-right-next="triangle-enterogermina-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/triangle-enterogermina-context.mp4"></video>
+      <video class="scene-video" playsinline data-video="triangle-enterogermina-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" alt="" src="images/select-enterogermina.jpg" data-fallback-src="images/select-enterogermina.png">
-        <button class="hotspot hotspot-left" data-role="left" aria-label="Select the other product"></button>
-        <button class="hotspot hotspot-right" data-role="right" aria-label="Select Enterogermina"></button>
+        <img class="select-img" alt="" data-img="select-enterogermina.jpg" data-img-fallback="select-enterogermina.png">
+        <button class="hotspot hotspot-left" data-role="left" data-i18n-aria="aria_select_other" aria-label="Select the other product"></button>
+        <button class="hotspot hotspot-right" data-role="right" data-i18n-aria="aria_select_enterogermina" aria-label="Select Enterogermina"></button>
       </div>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -458,11 +454,11 @@
 <div class="screen-overlay" id="screen-triangle-enterogermina-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/enterogermina-correct.mp4"></video>
+      <video class="scene-video" playsinline data-video="enterogermina-correct.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="triangle-explain">Next</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="triangle-explain" data-i18n="nav_next">Next</button>
     </div>
   </div>
 </div>
@@ -471,11 +467,11 @@
 <div class="screen-overlay" id="screen-triangle-enterogermina-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/enterogermina-wrong.mp4"></video>
+      <video class="scene-video" playsinline data-video="enterogermina-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="triangle-explain">Next</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="triangle-explain" data-i18n="nav_next">Next</button>
     </div>
   </div>
 </div>
@@ -484,11 +480,11 @@
 <div class="screen-overlay" id="screen-triangle-explain">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/copycat.mp4"></video>
+      <video class="scene-video" playsinline data-video="copycat.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="circle-welcome">Next Stop</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-welcome" data-i18n="nav_next_stop">Next Stop</button>
     </div>
   </div>
 </div>
@@ -504,10 +500,10 @@
           change data-on-end above back to "circle-essentiale-context". -->
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/circle-welcome.mp4"></video>
+      <video class="scene-video" playsinline data-video="circle-welcome.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -518,15 +514,15 @@
      data-reveal-before-end="2" data-left-next="circle-essentiale-wrong" data-right-next="circle-essentiale-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/circle-essentiale-context.mp4"></video>
+      <video class="scene-video" playsinline data-video="circle-essentiale-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" alt="" src="images/select-essentiale.jpg" data-fallback-src="images/select-essentiale.png">
-        <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select Yes"></button>
-        <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select No"></button>
+        <img class="select-img" alt="" data-img="select-essentiale.jpg" data-img-fallback="select-essentiale.png">
+        <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" data-i18n-aria="aria_select_yes" aria-label="Select Yes"></button>
+        <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" data-i18n-aria="aria_select_no" aria-label="Select No"></button>
       </div>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -535,11 +531,11 @@
 <div class="screen-overlay" id="screen-circle-essentiale-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/Essentiale-wrong.mp4"></video>
+      <video class="scene-video" playsinline data-video="Essentiale-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="circle-magneb6-context">Next Purchase</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-magneb6-context" data-i18n="nav_next_purchase">Next Purchase</button>
     </div>
   </div>
 </div>
@@ -548,11 +544,11 @@
 <div class="screen-overlay" id="screen-circle-essentiale-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/Essentiale-correct.mp4"></video>
+      <video class="scene-video" playsinline data-video="Essentiale-correct.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="circle-magneb6-context">Next Purchase</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-magneb6-context" data-i18n="nav_next_purchase">Next Purchase</button>
     </div>
   </div>
 </div>
@@ -562,15 +558,15 @@
      data-reveal-before-end="2" data-left-next="circle-magneb6-wrong" data-right-next="circle-magneb6-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/circle-magneb6-context.mp4"></video>
+      <video class="scene-video" playsinline data-video="circle-magneb6-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" alt="" src="images/select-magenb6.jpg" data-fallback-src="images/select-magenb6.png">
-        <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" aria-label="Select Yes"></button>
-        <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" aria-label="Select No"></button>
+        <img class="select-img" alt="" data-img="select-magenb6.jpg" data-img-fallback="select-magenb6.png">
+        <button class="hotspot hotspot-left hotspot-yn-left" data-role="left" data-i18n-aria="aria_select_yes" aria-label="Select Yes"></button>
+        <button class="hotspot hotspot-right hotspot-yn-right" data-role="right" data-i18n-aria="aria_select_no" aria-label="Select No"></button>
       </div>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -579,11 +575,11 @@
 <div class="screen-overlay" id="screen-circle-magneb6-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/Magne-B6-wrong.mp4"></video>
+      <video class="scene-video" playsinline data-video="Magne-B6-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="circle-explain">Next</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-explain" data-i18n="nav_next">Next</button>
     </div>
   </div>
 </div>
@@ -592,11 +588,11 @@
 <div class="screen-overlay" id="screen-circle-magneb6-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/Magne-B6-correct.mp4"></video>
+      <video class="scene-video" playsinline data-video="Magne-B6-correct.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="circle-explain">Next</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="circle-explain" data-i18n="nav_next">Next</button>
     </div>
   </div>
 </div>
@@ -605,11 +601,11 @@
 <div class="screen-overlay" id="screen-circle-explain">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/smuggling.mp4"></video>
+      <video class="scene-video" playsinline data-video="smuggling.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="diamond-welcome">Next Stop</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-welcome" data-i18n="nav_next_stop">Next Stop</button>
     </div>
   </div>
 </div>
@@ -619,10 +615,10 @@
 <div class="screen-overlay" id="screen-diamond-welcome" data-on-end="diamond-qunol-context">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/diamond-welcome.mp4"></video>
+      <video class="scene-video" playsinline data-video="diamond-welcome.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -633,15 +629,15 @@
      data-reveal-before-end="2" data-left-next="diamond-qunol-correct" data-right-next="diamond-qunol-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/diamond-Qunol-context.mp4"></video>
+      <video class="scene-video" playsinline data-video="diamond-Qunol-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" alt="" src="images/select-qunol.jpg" data-fallback-src="images/select-qunol.png">
-        <button class="hotspot hotspot-left hotspot-qunol-left" data-role="left" aria-label="Select Qunol"></button>
-        <button class="hotspot hotspot-right hotspot-qunol-right" data-role="right" aria-label="Select the other product"></button>
+        <img class="select-img" alt="" data-img="select-qunol.jpg" data-img-fallback="select-qunol.png">
+        <button class="hotspot hotspot-left hotspot-qunol-left" data-role="left" data-i18n-aria="aria_select_qunol" aria-label="Select Qunol"></button>
+        <button class="hotspot hotspot-right hotspot-qunol-right" data-role="right" data-i18n-aria="aria_select_other" aria-label="Select the other product"></button>
       </div>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -650,11 +646,11 @@
 <div class="screen-overlay" id="screen-diamond-qunol-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/qunol-correct.mp4"></video>
+      <video class="scene-video" playsinline data-video="qunol-correct.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="diamond-buscapina-context">Next Purchase</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-buscapina-context" data-i18n="nav_next_purchase">Next Purchase</button>
     </div>
   </div>
 </div>
@@ -663,11 +659,11 @@
 <div class="screen-overlay" id="screen-diamond-qunol-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/qunol-wrong.mp4"></video>
+      <video class="scene-video" playsinline data-video="qunol-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="diamond-buscapina-context">Next Purchase</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-buscapina-context" data-i18n="nav_next_purchase">Next Purchase</button>
     </div>
   </div>
 </div>
@@ -677,15 +673,15 @@
      data-reveal-before-end="2" data-left-next="diamond-buscapina-wrong" data-right-next="diamond-buscapina-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/diamond-buscapina-context.mp4"></video>
+      <video class="scene-video" playsinline data-video="diamond-buscapina-context.mp4"></video>
       <div class="select-hotspot-layer scene-overlay-image">
-        <img class="select-img" alt="" src="images/select-buscapina.jpg" data-fallback-src="images/select-buscapina.png">
-        <button class="hotspot hotspot-left hotspot-buscapina-left" data-role="left" aria-label="Select the other product"></button>
-        <button class="hotspot hotspot-right hotspot-buscapina-right" data-role="right" aria-label="Select Buscapina"></button>
+        <img class="select-img" alt="" data-img="select-buscapina.jpg" data-img-fallback="select-buscapina.png">
+        <button class="hotspot hotspot-left hotspot-buscapina-left" data-role="left" data-i18n-aria="aria_select_other" aria-label="Select the other product"></button>
+        <button class="hotspot hotspot-right hotspot-buscapina-right" data-role="right" data-i18n-aria="aria_select_buscapina" aria-label="Select Buscapina"></button>
       </div>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -694,11 +690,11 @@
 <div class="screen-overlay" id="screen-diamond-buscapina-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/buscapina-wrong.mp4"></video>
+      <video class="scene-video" playsinline data-video="buscapina-wrong.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="diamond-explain">Next</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-explain" data-i18n="nav_next">Next</button>
     </div>
   </div>
 </div>
@@ -707,11 +703,11 @@
 <div class="screen-overlay" id="screen-diamond-buscapina-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/buscapina-correct.mp4"></video>
+      <video class="scene-video" playsinline data-video="buscapina-correct.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="diamond-explain">Next</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-explain" data-i18n="nav_next">Next</button>
     </div>
   </div>
 </div>
@@ -722,11 +718,11 @@
 <div class="screen-overlay" id="screen-diamond-explain" data-on-end="route-complete">
   <div class="screen-inner">
     <div class="scene-video-wrap">
-      <video class="scene-video" playsinline src="videos/counterfeiting.mp4"></video>
+      <video class="scene-video" playsinline data-video="counterfeiting.mp4"></video>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn" data-action="map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="route-complete">Finish Route</button>
+      <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="route-complete" data-i18n="nav_finish_route">Finish Route</button>
     </div>
   </div>
 </div>
@@ -737,10 +733,10 @@
   <div class="screen-inner">
     <div class="route-complete-banner">
       <div class="route-complete-check">&#10003;</div>
-      <div class="route-complete-title">Route Completed Successfully!</div>
+      <div class="route-complete-title" data-i18n="route_complete_title">Route Completed Successfully!</div>
     </div>
     <div class="screen-nav">
-      <button class="nav-btn nav-btn-primary" data-action="map">Back to Map</button>
+      <button class="nav-btn nav-btn-primary" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
     </div>
   </div>
 </div>
@@ -755,22 +751,154 @@
   var startBtn = document.getElementById("btn-start-route");
   var routeActive = false;
 
+  // ---- Per-language media folders + text translation ----
+  // Every video/image in the page carries its plain filename in data-video /
+  // data-img (+ data-img-fallback) instead of a hardcoded src. videoPath()/
+  // imagePath() turn that filename into the real path inside the chosen
+  // language's subfolder -- videos/EN/<file>, videos/ES/<file>, videos/PO/<file>
+  // (and the same for images/) -- using the exact same filenames and the
+  // exact same screen order already built for English. applyMediaLanguage()
+  // re-points every element whenever the language changes; applyTextLanguage()
+  // re-translates every button/label marked with data-i18n / data-i18n-aria.
+  var LANG_FOLDERS = { en: "EN", es: "ES", po: "PO" };
+  var currentLang = "en";
+
+  var I18N = {
+    en: {
+      title: "Brand Protection Route",
+      badge_map_view: "MAP VIEW",
+      search_new_trade_visit: "New Trade Visit",
+      route_banner_title: "Pharmacy Visit Route",
+      stop_opella: "Opella Healthcare Colombia",
+      stop_triangle: "Triangle Pharmacy",
+      stop_star: "Star Pharmacy",
+      stop_circle: "Circle Pharmacy",
+      btn_start_route: "Start Route",
+      btn_clear_route: "Clear Route",
+      btn_change_language: "Change Language",
+      nav_back_to_map: "Back to Map",
+      nav_next_purchase: "Next Purchase",
+      nav_next: "Next",
+      nav_next_stop: "Next Stop",
+      nav_finish_route: "Finish Route",
+      route_complete_title: "Route Completed Successfully!",
+      aria_select_allegra: "Select Allegra",
+      aria_select_other: "Select the other product",
+      aria_select_enterogermina: "Select Enterogermina",
+      aria_select_yes: "Select Yes",
+      aria_select_no: "Select No",
+      aria_select_qunol: "Select Qunol",
+      aria_select_buscapina: "Select Buscapina"
+    },
+    es: {
+      title: "Ruta de Protección de Marca",
+      badge_map_view: "VISTA DE MAPA",
+      search_new_trade_visit: "Nueva Visita Comercial",
+      route_banner_title: "Ruta de Visita a Farmacias",
+      stop_opella: "Opella Healthcare Colombia",
+      stop_triangle: "Farmacia Triangle",
+      stop_star: "Farmacia Star",
+      stop_circle: "Farmacia Circle",
+      btn_start_route: "Iniciar Ruta",
+      btn_clear_route: "Terminar Ruta",
+      btn_change_language: "Cambiar Idioma",
+      nav_back_to_map: "Volver al Mapa",
+      nav_next_purchase: "Siguiente Compra",
+      nav_next: "Siguiente",
+      nav_next_stop: "Siguiente Parada",
+      nav_finish_route: "Finalizar Ruta",
+      route_complete_title: "¡Ruta Completada con Éxito!",
+      aria_select_allegra: "Seleccionar Allegra",
+      aria_select_other: "Seleccionar el otro producto",
+      aria_select_enterogermina: "Seleccionar Enterogermina",
+      aria_select_yes: "Seleccionar Sí",
+      aria_select_no: "Seleccionar No",
+      aria_select_qunol: "Seleccionar Qunol",
+      aria_select_buscapina: "Seleccionar Buscapina"
+    },
+    po: {
+      title: "Rota de Proteção de Marca",
+      badge_map_view: "VISTA DO MAPA",
+      search_new_trade_visit: "Nova Visita Comercial",
+      route_banner_title: "Rota de Visita às Farmácias",
+      stop_opella: "Opella Healthcare Colombia",
+      stop_triangle: "Farmácia Triangle",
+      stop_star: "Farmácia Star",
+      stop_circle: "Farmácia Circle",
+      btn_start_route: "Iniciar Rota",
+      btn_clear_route: "Encerrar Rota",
+      btn_change_language: "Mudar Idioma",
+      nav_back_to_map: "Voltar ao Mapa",
+      nav_next_purchase: "Próxima Compra",
+      nav_next: "Próximo",
+      nav_next_stop: "Próxima Parada",
+      nav_finish_route: "Finalizar Rota",
+      route_complete_title: "Rota Concluída com Sucesso!",
+      aria_select_allegra: "Selecionar Allegra",
+      aria_select_other: "Selecionar o outro produto",
+      aria_select_enterogermina: "Selecionar Enterogermina",
+      aria_select_yes: "Selecionar Sim",
+      aria_select_no: "Selecionar Não",
+      aria_select_qunol: "Selecionar Qunol",
+      aria_select_buscapina: "Selecionar Buscapina"
+    }
+  };
+
+  function videoPath(filename){ return "videos/" + LANG_FOLDERS[currentLang] + "/" + filename; }
+  function imagePath(filename){ return "images/" + LANG_FOLDERS[currentLang] + "/" + filename; }
+
+  function restartIdleMapVideo(){
+    if(routeActive) return;
+    videoNoRoute.currentTime = 0;
+    var p = videoNoRoute.play();
+    if(p && p.catch) p.catch(function(){ /* autoplay still locked; a later interaction will retry */ });
+  }
+
+  function applyMediaLanguage(){
+    document.querySelectorAll("[data-video]").forEach(function(v){
+      var filename = v.getAttribute("data-video");
+      v.removeAttribute("data-preloading");
+      v.src = videoPath(filename);
+      v.load();
+    });
+    document.querySelectorAll("[data-img]").forEach(function(img){
+      var wrap = img.closest(".scene-video-wrap");
+      clearMediaMissing(wrap);
+      img.style.display = "";
+      var filename = img.getAttribute("data-img");
+      var fallbackFilename = img.getAttribute("data-img-fallback");
+      img.src = imagePath(filename);
+      if(fallbackFilename) img.setAttribute("data-fallback-src", imagePath(fallbackFilename));
+    });
+    restartIdleMapVideo();
+  }
+
+  function applyTextLanguage(lang){
+    var dict = I18N[lang] || I18N.en;
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      var key = el.getAttribute("data-i18n");
+      if(dict[key] != null) el.textContent = dict[key];
+    });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function(el){
+      var key = el.getAttribute("data-i18n-aria");
+      if(dict[key] != null) el.setAttribute("aria-label", dict[key]);
+    });
+    startBtn.textContent = routeActive ? dict.btn_clear_route : dict.btn_start_route;
+  }
+
   // Language picker — shown first, before anything else on the page.
-  // Only English actually proceeds right now; Spanish/Portuguese just
-  // reveal a short note instead, since those video sets don't exist yet.
-  // The map underneath keeps idling behind this the whole time, so once
-  // English is picked it's just already there, ready to go.
+  // English, Spanish and Portuguese all proceed: picking one points every
+  // video/image at that language's subfolder and re-translates every
+  // button/label. The map underneath keeps idling behind this the whole
+  // time, so once a language is picked it's just already there, ready to go.
   var languageSelect = document.getElementById("language-select");
-  var languageUnavailableMsg = document.getElementById("language-unavailable-msg");
   var changeLanguageBtn = document.getElementById("btn-change-language");
   languageSelect.querySelectorAll(".language-btn").forEach(function(btn){
     btn.addEventListener("click", function(){
-      var lang = btn.getAttribute("data-lang");
-      if(lang === "en"){
-        languageSelect.classList.add("is-hidden");
-      } else {
-        languageUnavailableMsg.classList.add("is-visible");
-      }
+      currentLang = btn.getAttribute("data-lang");
+      applyMediaLanguage();
+      applyTextLanguage(currentLang);
+      languageSelect.classList.add("is-hidden");
     });
   });
   // Small escape hatch in the corner of the map, in case the wrong language
@@ -778,9 +906,13 @@
   // hideRoute below, which hide and reveal this button the same way they
   // do the trip-bar).
   changeLanguageBtn.addEventListener("click", function(){
-    languageUnavailableMsg.classList.remove("is-visible");
     languageSelect.classList.remove("is-hidden");
   });
+
+  // Set the initial (English) media paths and text right away, before
+  // anything below tries to read a video's state or an image's load result.
+  applyMediaLanguage();
+  applyTextLanguage(currentLang);
 
   // Very soft hold-music bed under the idle map (before a route starts).
   // Browsers block un-muted autoplay until the visitor has interacted with
@@ -811,7 +943,7 @@
   function showRoute(){
     mapFrame.classList.add("is-active");
     startBtn.classList.add("is-active");
-    startBtn.textContent = "Clear Route";
+    startBtn.textContent = (I18N[currentLang] || I18N.en).btn_clear_route;
     tripBar.classList.add("is-hidden");
     changeLanguageBtn.classList.add("is-hidden");
     videoWithRoute.currentTime = 0;
@@ -832,7 +964,7 @@
   function hideRoute(){
     mapFrame.classList.remove("is-active");
     startBtn.classList.remove("is-active");
-    startBtn.textContent = "Start Route";
+    startBtn.textContent = (I18N[currentLang] || I18N.en).btn_start_route;
     tripBar.classList.remove("is-hidden");
     changeLanguageBtn.classList.remove("is-hidden");
     videoNoRoute.currentTime = 0;
