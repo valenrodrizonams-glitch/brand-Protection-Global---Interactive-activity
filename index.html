@@ -389,7 +389,7 @@
 <!-- 4. Triangle Pharmacy - Copycat Allegra — the Allegra selection image (4.1) fades in over the
      last 2 seconds of this video; left = Allegra (-> 4.3, correct), right = the other box (-> 4.2, wrong) -->
 <div class="screen-overlay" id="screen-triangle-allegra-context"
-     data-reveal-before-end="5" data-left-next="triangle-allegra-correct" data-right-next="triangle-allegra-wrong">
+     data-reveal-before-end="0.5" data-left-next="triangle-allegra-correct" data-right-next="triangle-allegra-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline preload="none" data-video="triangle-allegra-context.mp4"></video>
@@ -445,7 +445,7 @@
 <!-- 5. Triangle Pharmacy - Copycat Enterogermina — image 5.1 fades in the same way;
      here right = Enterogermina (-> 5.3, correct), left = the other box (-> 5.2, wrong) -->
 <div class="screen-overlay" id="screen-triangle-enterogermina-context"
-     data-reveal-before-end="5" data-left-next="triangle-enterogermina-wrong" data-right-next="triangle-enterogermina-correct">
+     data-reveal-before-end="0.5" data-left-next="triangle-enterogermina-wrong" data-right-next="triangle-enterogermina-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline preload="none" data-video="triangle-enterogermina-context.mp4"></video>
@@ -489,13 +489,24 @@
 
 <!-- Copycat summary video — wraps up the Triangle Pharmacy visit -->
 <div class="screen-overlay" id="screen-triangle-explain">
+     <!-- Circle Pharmacy (the whole second stop) is temporarily skipped for
+          this run: this button now goes straight to diamond-welcome instead
+          of circle-welcome. Every Circle Pharmacy screen below
+          (circle-welcome, circle-essentiale-context / -correct / -wrong,
+          circle-magneb6-context / -wrong / -correct, circle-explain) is
+          untouched and still fully wired up -- just unreachable from the
+          normal flow while this points past them. This applies the same way
+          in every language, since it only changes which screen comes next,
+          not any text or media. To bring Circle Pharmacy back, change
+          data-action below back to "circle-welcome" and data-i18n back to
+          "nav_next_stop". -->
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline preload="none" data-video="copycat.mp4"></video>
     </div>
     <div class="screen-nav">
       <button class="nav-btn" data-action="map" data-i18n="nav_back_to_map">Back to Map</button>
-      <button class="nav-btn nav-btn-primary" data-action="circle-welcome" data-i18n="nav_next_stop">Next Stop</button>
+      <button class="nav-btn nav-btn-primary" data-action="diamond-welcome" data-i18n="nav_next_stop">Next Stop</button>
     </div>
   </div>
 </div>
@@ -526,7 +537,7 @@
 <!-- Circle Pharmacy - Copycat Essentiale — Yes/No hotspots reveal over the video's
      own on-screen Yes/No labels in the last 2 seconds; Yes = wrong pick, No = correct -->
 <div class="screen-overlay" id="screen-circle-essentiale-context"
-     data-reveal-before-end="2" data-left-next="circle-essentiale-wrong" data-right-next="circle-essentiale-correct">
+     data-reveal-before-end="0.5" data-left-next="circle-essentiale-wrong" data-right-next="circle-essentiale-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline preload="none" data-video="circle-essentiale-context.mp4"></video>
@@ -570,7 +581,7 @@
 
 <!-- Circle Pharmacy - Copycat Magne-B6 — same Yes/No pattern; Yes = wrong pick, No = correct -->
 <div class="screen-overlay" id="screen-circle-magneb6-context"
-     data-reveal-before-end="2" data-left-next="circle-magneb6-wrong" data-right-next="circle-magneb6-correct">
+     data-reveal-before-end="0.5" data-left-next="circle-magneb6-wrong" data-right-next="circle-magneb6-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline preload="none" data-video="circle-magneb6-context.mp4"></video>
@@ -647,7 +658,7 @@
 <!-- Diamond Pharmacy - Copycat Qunol — Yes/No-style hotspots reveal over the video's
      own on-screen product choice in the last 2 seconds; left = correct, right = wrong -->
 <div class="screen-overlay" id="screen-diamond-qunol-context"
-     data-reveal-before-end="2" data-left-next="diamond-qunol-correct" data-right-next="diamond-qunol-wrong">
+     data-reveal-before-end="0.5" data-left-next="diamond-qunol-correct" data-right-next="diamond-qunol-wrong">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline preload="none" data-video="diamond-Qunol-context.mp4"></video>
@@ -691,7 +702,7 @@
 
 <!-- Diamond Pharmacy - Copycat Buscapina — same pattern; here left = wrong, right = correct -->
 <div class="screen-overlay" id="screen-diamond-buscapina-context"
-     data-reveal-before-end="2" data-left-next="diamond-buscapina-wrong" data-right-next="diamond-buscapina-correct">
+     data-reveal-before-end="0.5" data-left-next="diamond-buscapina-wrong" data-right-next="diamond-buscapina-correct">
   <div class="screen-inner">
     <div class="scene-video-wrap">
       <video class="scene-video" playsinline preload="none" data-video="diamond-buscapina-context.mp4"></video>
